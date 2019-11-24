@@ -1,7 +1,7 @@
 // Driver Program for Red Black Tree
 
 #include <bits/stdc++.h>
-#include "RBTree.h"
+#include "RBTree.hpp"
 using namespace std;
 
 int main() {
@@ -15,6 +15,7 @@ int main() {
         cin >> data;
     }
 
+    /*
     rbTree1.preorder();
 
     cin >> data;
@@ -27,7 +28,19 @@ int main() {
     rbTree2.preorder();
 
     rbTree1.merge(rbTree2);
-    rbTree1.preorder();
+    
+    rbTree1.inorder();
+    */
+   
+    int v;
+    cin >> v;
+    cout << (rbTree1.contains(v) ? "true" : "false") << endl;
+
+    rbTree1.inorder<char>([](int &data, char arg)->RBTree::Finisher
+    {
+        cout << arg << " " <<  data << endl;
+        return RBTree::DONT_STOP;
+    }, 'a');
 
     return 0;
 }

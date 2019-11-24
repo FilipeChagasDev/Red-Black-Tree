@@ -1,9 +1,62 @@
 //
-// Red Black Tree Implementation
+// Red Black Tree Definition
 //
+
+//Forked from: https://github.com/anandarao/Red-Black-Tree
+//Modified by Filipe Chagas (github.com/FilipeChagasDev)
+
+#ifndef RED_BLACK_TREE_RBTREE_H
+#define RED_BLACK_TREE_RBTREE_H
+
 #include <bits/stdc++.h>
-#include "RBTree.h"
+#include <exception>
+
 using namespace std;
+
+enum Color {RED, BLACK, DOUBLE_BLACK};
+
+
+struct Node
+{
+    int data;
+    int color;
+    Node *left, *right, *parent;
+
+    explicit Node(int);
+};
+
+class RBTree
+{
+    public:
+        enum Finisher {DONT_STOP, STOP};
+    private:
+        Node *root;
+    protected:
+        void rotateLeft(Node *&);
+        void rotateRight(Node *&);
+        void fixInsertRBTree(Node *&);
+        void fixDeleteRBTree(Node *&);
+
+        template<typename argt> void inorderBST(Node *&, Finisher (*callback)(int&, argt), argt);
+
+        void preorderBST(Node *&);
+        int getColor(Node *&);
+        void setColor(Node *&, int);
+        Node *minValueNode(Node *&);
+        Node *maxValueNode(Node *&);
+        Node* insertBST(Node *&, Node *&);
+        Node* deleteBST(Node *&, int);
+        int getBlackHeight(Node *);
+    public:
+        RBTree();
+        void insertValue(int);
+        void deleteValue(int);
+        void merge(RBTree);
+        template<typename argt> void inorder(Finisher (*callback)(int&,argt), argt);
+        void preorder();
+        bool contains(int);
+};
+
 
 Node::Node(int data) {
     this->data = data;
@@ -13,6 +66,23 @@ Node::Node(int data) {
 
 RBTree::RBTree() {
     root = nullptr;
+}
+
+bool RBTree::contains(int v)
+{
+    struct Node *iterator = root;
+
+    while (iterator != nullptr)
+    {
+        if(iterator->data == v) return true;
+        else
+        {
+            if(iterator->data > v) iterator = iterator->left;
+            else iterator = iterator->right;  //iterator->data < v
+        }
+    }
+
+    return false;
 }
 
 int RBTree::getColor(Node *&node) {
@@ -257,17 +327,20 @@ void RBTree::deleteValue(int data) {
     fixDeleteRBTree(node);
 }
 
-void RBTree::inorderBST(Node *&ptr) {
+template<typename argt>
+void RBTree::inorderBST(Node *&ptr, Finisher (*callback)(int&, argt), argt arg) {
     if (ptr == nullptr)
         return;
 
-    inorderBST(ptr->left);
-    cout << ptr->data << " " << ptr->color << endl;
-    inorderBST(ptr->right);
+    inorderBST(ptr->left, callback, arg);
+    if(callback(ptr->data,arg) == Finisher::STOP) return;
+    inorderBST(ptr->right, callback, arg);
 }
 
-void RBTree::inorder() {
-    inorderBST(root);
+
+template<typename argt>
+void RBTree::inorder(Finisher (*callback)(int&, argt), argt arg) {
+    inorderBST(root, callback, arg);
 }
 
 void RBTree::preorderBST(Node *&ptr) {
@@ -413,3 +486,5 @@ void RBTree::merge(RBTree rbTree2) {
     }
     return;
 }
+
+#endif //RED_BLACK_TREE_RBTREE_H
