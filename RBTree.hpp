@@ -10,15 +10,15 @@
 
 #include <bits/stdc++.h>
 #include <exception>
+#include <cstdint>
 
 using namespace std;
 
 enum Color {RED, BLACK, DOUBLE_BLACK};
 
-
 struct Node
 {
-    int data;
+    uintptr_t data;
     int color;
     Node *left, *right, *parent;
 
@@ -37,7 +37,7 @@ class RBTree
         void fixInsertRBTree(Node *&);
         void fixDeleteRBTree(Node *&);
 
-        template<typename argt> void inorderBST(Node *&, Finisher (*callback)(int&, argt), argt);
+        template<typename argt> void inorderBST(Node *&, Finisher (*callback)(uintptr_t&, argt), argt);
 
         void preorderBST(Node *&);
         int getColor(Node *&);
@@ -45,16 +45,16 @@ class RBTree
         Node *minValueNode(Node *&);
         Node *maxValueNode(Node *&);
         Node* insertBST(Node *&, Node *&);
-        Node* deleteBST(Node *&, int);
+        Node* deleteBST(Node *&, uintptr_t);
         int getBlackHeight(Node *);
     public:
         RBTree();
-        void insertValue(int);
-        void deleteValue(int);
+        void insertValue(uintptr_t);
+        void deleteValue(uintptr_t);
         void merge(RBTree);
-        template<typename argt> void inorder(Finisher (*callback)(int&,argt), argt);
+        template<typename argt> void inorder(Finisher (*callback)(uintptr_t&,argt), argt);
         void preorder();
-        bool contains(int);
+        bool contains(uintptr_t);
 };
 
 
@@ -68,7 +68,7 @@ RBTree::RBTree() {
     root = nullptr;
 }
 
-bool RBTree::contains(int v)
+bool RBTree::contains(uintptr_t v)
 {
     struct Node *iterator = root;
 
@@ -114,7 +114,7 @@ Node* RBTree::insertBST(Node *&root, Node *&ptr) {
     return root;
 }
 
-void RBTree::insertValue(int n) {
+void RBTree::insertValue(uintptr_t n) {
     Node *node = new Node(n);
     root = insertBST(root, node);
     fixInsertRBTree(node);
@@ -304,7 +304,7 @@ void RBTree::fixDeleteRBTree(Node *&node) {
     }
 }
 
-Node* RBTree::deleteBST(Node *&root, int data) {
+Node* RBTree::deleteBST(Node *&root, uintptr_t data) {
     if (root == nullptr)
         return root;
 
@@ -322,13 +322,13 @@ Node* RBTree::deleteBST(Node *&root, int data) {
     return deleteBST(root->right, temp->data);
 }
 
-void RBTree::deleteValue(int data) {
+void RBTree::deleteValue(uintptr_t data) {
     Node *node = deleteBST(root, data);
     fixDeleteRBTree(node);
 }
 
 template<typename argt>
-void RBTree::inorderBST(Node *&ptr, Finisher (*callback)(int&, argt), argt arg) {
+void RBTree::inorderBST(Node *&ptr, Finisher (*callback)(uintptr_t&, argt), argt arg) {
     if (ptr == nullptr)
         return;
 
@@ -339,7 +339,7 @@ void RBTree::inorderBST(Node *&ptr, Finisher (*callback)(int&, argt), argt arg) 
 
 
 template<typename argt>
-void RBTree::inorder(Finisher (*callback)(int&, argt), argt arg) {
+void RBTree::inorder(Finisher (*callback)(uintptr_t&, argt), argt arg) {
     inorderBST(root, callback, arg);
 }
 

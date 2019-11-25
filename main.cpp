@@ -36,7 +36,7 @@ int main() {
     cin >> v;
     cout << (rbTree1.contains(v) ? "true" : "false") << endl;
 
-    rbTree1.inorder<char>([](int &data, char arg)->RBTree::Finisher
+    rbTree1.inorder<char>([](uintptr_t &data, char arg)->RBTree::Finisher
     {
         cout << arg << " " <<  data << endl;
         return RBTree::DONT_STOP;
