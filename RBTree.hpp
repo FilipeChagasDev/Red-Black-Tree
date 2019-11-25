@@ -55,6 +55,7 @@ class RBTree
         template<typename argt> void inorder(Finisher (*callback)(uintptr_t&,argt), argt);
         void preorder();
         bool contains(uintptr_t);
+        bool empty();
 };
 
 
@@ -66,6 +67,11 @@ Node::Node(int data) {
 
 RBTree::RBTree() {
     root = nullptr;
+}
+
+bool RBTree::empty()
+{
+    return this->root == nullptr;
 }
 
 bool RBTree::contains(uintptr_t v)
